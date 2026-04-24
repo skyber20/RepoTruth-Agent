@@ -58,7 +58,7 @@ def render_group(title, report, verdict):
 
     for audit in items:
         lines.append(f"- {audit.claim.text}")
-        lines.append(f"  - confidence: {audit.verdict.confidence:.2f}")
+        lines.append(f"  - verdict confidence: {audit.verdict.confidence:.2f}")
         lines.append(f"  - reason: {audit.verdict.reason}")
         if audit.verdict.evidence_used:
             lines.append(f"  - evidence: {', '.join(audit.verdict.evidence_used)}")

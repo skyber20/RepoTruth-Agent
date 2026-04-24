@@ -7,6 +7,9 @@ def verify_claim(claim, plan, evidence, file_contexts=None, llm=None):
 
     file_contexts = file_contexts or []
     rule_verdict = verify_by_rules(plan, evidence)
+    if skip_llm_verifier(rule_verdict, evidence):
+        return rule_verdict
+
     if not llm or not llm.available:
         return rule_verdict
 
@@ -34,12 +37,24 @@ def verify_claim(claim, plan, evidence, file_contexts=None, llm=None):
     verdict.confidence = max(0.0, min(1.0, verdict.confidence))
     verdict.llm_used = True
 
+    if verdict.verdict == "missing":
+        verdict.evidence_used = []
+
     if verdict.verdict == "confirmed" and not has_real_evidence(verdict.evidence_used, evidence):
         verdict.verdict = "partial" if evidence else "missing"
         verdict.confidence = min(verdict.confidence, 0.55)
         verdict.reason = "LLM не сослалась на реальные code/config evidence, verdict понижен."
 
     return verdict
+
+
+def skip_llm_verifier(rule_verdict, evidence):
+    """Пропускает LLM, если claim явно не найден."""
+
+    if rule_verdict.verdict != "missing":
+        return False
+    real = [item for item in evidence if item.kind != "readme"]
+    return not signal_groups(real)
 
 
 def verify_by_rules(plan, evidence):

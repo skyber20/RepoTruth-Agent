@@ -21,6 +21,7 @@ class LLMClient:
     model: str | None = None
     timeout: int = 90
     temperature: float = 0.1
+    last_error: str | None = None
 
     @classmethod
     def from_env(cls):
@@ -39,13 +40,15 @@ class LLMClient:
         if not self.available:
             raise LLMError("Нужны OPENAI_BASE_URL, OPENAI_API_KEY и OPENAI_MODEL.")
 
+        self.last_error = None
         answer = self._complete(system_prompt, user_payload)
         return extract_json(answer)
 
     def try_complete_json(self, system_prompt, user_payload):
         try:
             return self.complete_json(system_prompt, user_payload)
-        except Exception:
+        except Exception as error:
+            self.last_error = str(error)
             return None
 
     def _complete(self, system_prompt, user_payload):

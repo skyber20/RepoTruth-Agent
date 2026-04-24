@@ -9,6 +9,7 @@ from repotruth.models import EvidenceItem
 
 
 SKIP_DIRS = {".git", "node_modules", ".venv", "venv", "dist", "build", "__pycache__", ".pytest_cache"}
+NOISY_KEYWORDS = {"api", "bot", "rag", "test", "from", "cmd"}
 TEXT_EXTENSIONS = {
     ".py", ".txt", ".md", ".toml", ".yml", ".yaml", ".json", ".js", ".jsx", ".ts", ".tsx",
     ".env", ".ini", ".cfg", ".dockerfile", ".sh", ".sql", ".html", ".css",
@@ -219,17 +220,36 @@ def normalize_dep(name):
 def search_code_patterns(root, plan):
     """Ищет строки кода."""
 
-    patterns = []
-    patterns.extend(plan.code_patterns)
-    patterns.extend(plan.keywords)
-    patterns = [pattern for pattern in unique(patterns) if len(pattern) >= 3]
+    patterns = search_patterns(plan)
 
     if shutil.which("rg"):
-        return rg_search(root, patterns)
-    return python_search(root, patterns)
+        return rg_search(root, patterns, plan)
+    return python_search(root, patterns, plan)
 
 
-def rg_search(root, patterns):
+def search_patterns(plan):
+    """Готовит безопасные паттерны поиска."""
+
+    patterns = []
+    patterns.extend(plan.code_patterns)
+    for keyword in plan.keywords:
+        if safe_keyword(keyword, plan.claim_type):
+            patterns.append(keyword)
+    return [pattern for pattern in unique(patterns) if len(pattern) >= 3]
+
+
+def safe_keyword(keyword, claim_type):
+    """Отсекает слишком шумные слова."""
+
+    clean = str(keyword).lower().strip()
+    if clean in NOISY_KEYWORDS:
+        return False
+    if claim_type == "rag" and clean in {"context", "documents"}:
+        return False
+    return True
+
+
+def rg_search(root, patterns, plan):
     """Ищет через ripgrep."""
 
     evidence = []
@@ -245,7 +265,7 @@ def rg_search(root, patterns):
 
         for line in result.stdout.splitlines()[:25]:
             item = parse_rg_line(root, line, pattern)
-            if item:
+            if item and useful_match(item, pattern, plan):
                 evidence.append(item)
 
     return evidence
@@ -274,7 +294,7 @@ def parse_rg_line(root, line, pattern):
     )
 
 
-def python_search(root, patterns):
+def python_search(root, patterns, plan):
     """Ищет через Python, если нет rg."""
 
     evidence = []
@@ -290,17 +310,47 @@ def python_search(root, patterns):
             lower_line = line.lower()
             for pattern in patterns:
                 if pattern.lower() in lower_line:
-                    evidence.append(
-                        EvidenceItem(
-                            kind=kind_for_path(relative),
-                            path=relative,
-                            line=line_number,
-                            snippet=line.strip()[:300],
-                            matched_signal=f"pattern:{pattern}",
-                        )
+                    item = EvidenceItem(
+                        kind=kind_for_path(relative),
+                        path=relative,
+                        line=line_number,
+                        snippet=line.strip()[:300],
+                        matched_signal=f"pattern:{pattern}",
                     )
+                    if useful_match(item, pattern, plan):
+                        evidence.append(item)
                     break
     return evidence
+
+
+def useful_match(item, pattern, plan):
+    """Фильтрует ложные совпадения."""
+
+    path = item.path.lower()
+    snippet = item.snippet.lower()
+    clean = str(pattern).lower().strip()
+
+    if plan.claim_type == "docker" and clean in {"from", "from python", "copy .", "cmd", "entrypoint"}:
+        return docker_path(path)
+
+    if plan.claim_type == "telegram_bot":
+        if clean == "bot":
+            return False
+        if "roboto" in snippet or "bottom" in snippet:
+            return False
+
+    if plan.claim_type == "rag":
+        noisy = ["drag", "coverage", "cobertura", "pragma"]
+        if any(word in snippet for word in noisy):
+            return False
+
+    return True
+
+
+def docker_path(path):
+    """Проверяет, что путь похож на Docker/CI config."""
+
+    return path.endswith("dockerfile") or "docker-compose" in path or path.endswith("compose.yml") or path.endswith("compose.yaml") or path.endswith(".gitlab-ci.yml") or ".github/workflows/" in path
 
 
 def is_text_file(path):

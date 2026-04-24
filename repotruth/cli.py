@@ -2,6 +2,7 @@ from pathlib import Path
 
 import typer
 from rich.console import Console
+from rich.progress import Progress, SpinnerColumn, TextColumn
 from rich.table import Table
 
 from repotruth import __version__
@@ -33,8 +34,18 @@ def audit(
     """Запускает аудит репозитория."""
 
     try:
-        with console.status("[bold]RepoTruth проверяет репозиторий...[/bold]"):
-            report, markdown_path, json_path = run_audit(repo, claims, out, no_llm=no_llm)
+        with Progress(
+            SpinnerColumn(),
+            TextColumn("[bold]{task.description}[/bold]"),
+            console=console,
+            transient=True,
+        ) as progress:
+            task = progress.add_task("Старт аудита...", total=None)
+
+            def show_step(message):
+                progress.update(task, description=message)
+
+            report, markdown_path, json_path = run_audit(repo, claims, out, no_llm=no_llm, event=show_step)
     except Exception as error:
         console.print(f"[red]Ошибка:[/red] {error}")
         raise typer.Exit(1) from error
@@ -43,6 +54,7 @@ def audit(
     console.print()
     console.print(f"[green]Markdown:[/green] {markdown_path}")
     console.print(f"[green]JSON:[/green] {json_path}")
+    console.print(f"[green]Log:[/green] {Path(out) / 'run.log'}")
 
 
 def show_summary(report):
@@ -51,7 +63,7 @@ def show_summary(report):
     table = Table(title="RepoTruth Summary")
     table.add_column("Claim", style="bold")
     table.add_column("Verdict")
-    table.add_column("Confidence")
+    table.add_column("Verdict confidence")
     table.add_column("Top evidence")
 
     for audit in report.audits:

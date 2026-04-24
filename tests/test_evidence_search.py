@@ -29,3 +29,15 @@ def test_dockerfile_becomes_evidence(tmp_path):
     evidence = search_evidence(tmp_path, plan)
 
     assert any(item.path == "Dockerfile" for item in evidence)
+
+
+def test_rag_ignores_unrelated_likely_files(tmp_path):
+    (tmp_path / "requirements.txt").write_text("fastapi==0.1.0\n", encoding="utf-8")
+    (tmp_path / "run.py").write_text("print('run')\n", encoding="utf-8")
+    claim = AtomicClaim(id="C1", text="Реализован RAG")
+    plan = registry_plan_for_claim(claim)
+    plan.likely_files = ["requirements.txt", "run.py"]
+
+    evidence = search_evidence(tmp_path, plan)
+
+    assert evidence == []

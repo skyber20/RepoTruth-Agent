@@ -23,6 +23,7 @@ class SearchPlan(BaseModel):
     dependency_names: list[str] = Field(default_factory=list)
     code_patterns: list[str] = Field(default_factory=list)
     strong_signals: list[str] = Field(default_factory=list)
+    tools: list[str] = Field(default_factory=list)
 
 
 class EvidenceItem(BaseModel):
@@ -91,6 +92,7 @@ class ClaimAudit(BaseModel):
     plan: SearchPlan
     evidence: list[EvidenceItem] = Field(default_factory=list)
     verdict: ClaimVerdict
+    tools_used: list[str] = Field(default_factory=list)
 
 
 class AuditReport(BaseModel):

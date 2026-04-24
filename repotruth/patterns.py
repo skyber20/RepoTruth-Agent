@@ -1,6 +1,10 @@
 from .models import AtomicClaim, SearchPlan
 
 
+DEFAULT_TOOLS = ["repo_evidence_search_tool", "file_context_reader_tool", "claim_verifier_tool"]
+ALLOWED_TOOLS = set(DEFAULT_TOOLS)
+
+
 PATTERNS = [
     {
         "claim_type": "docker",
@@ -136,6 +140,7 @@ def registry_plan_for_claim(claim):
                 dependency_names=pattern["dependency_names"],
                 code_patterns=pattern["code_patterns"],
                 strong_signals=pattern["strong_signals"],
+                tools=DEFAULT_TOOLS,
             )
 
     words = []
@@ -149,6 +154,7 @@ def registry_plan_for_claim(claim):
         claim_type="unknown",
         keywords=unique(words)[:8],
         strong_signals=["code_or_config_match"],
+        tools=DEFAULT_TOOLS,
     )
 
 
@@ -174,6 +180,7 @@ def merge_plans(base, llm_plan):
             dependency_names=unique(base.dependency_names + llm_plan.dependency_names),
             code_patterns=unique(base.code_patterns + llm_plan.code_patterns),
             strong_signals=unique(base.strong_signals + llm_plan.strong_signals),
+            tools=normalize_tools(llm_plan.tools or base.tools),
         )
     )
 
@@ -186,7 +193,19 @@ def clamp_plan(plan):
     plan.dependency_names = unique(plan.dependency_names)[:20]
     plan.code_patterns = unique(plan.code_patterns)[:24]
     plan.strong_signals = unique(plan.strong_signals)[:12]
+    plan.tools = normalize_tools(plan.tools)
     return plan
+
+
+def normalize_tools(tools):
+    """Чистит список tools."""
+
+    result = [tool for tool in unique(tools) if tool in ALLOWED_TOOLS]
+    if "repo_evidence_search_tool" not in result:
+        result.insert(0, "repo_evidence_search_tool")
+    if "claim_verifier_tool" not in result:
+        result.append("claim_verifier_tool")
+    return result
 
 
 def unique(values):

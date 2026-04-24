@@ -7,10 +7,7 @@ def verify_claim(claim, plan, evidence, file_contexts=None, llm=None):
 
     file_contexts = file_contexts or []
     rule_verdict = verify_by_rules(plan, evidence)
-    if skip_llm_verifier(rule_verdict, evidence):
-        return rule_verdict
-
-    if not llm or not llm.available:
+    if not should_call_llm_verifier(plan, rule_verdict, evidence, llm):
         return rule_verdict
 
     payload = {
@@ -48,13 +45,30 @@ def verify_claim(claim, plan, evidence, file_contexts=None, llm=None):
     return verdict
 
 
-def skip_llm_verifier(rule_verdict, evidence):
-    """Пропускает LLM, если claim явно не найден."""
+def should_call_llm_verifier(plan, rule_verdict, evidence, llm):
+    """Решает, нужна ли LLM для verifier."""
 
-    if rule_verdict.verdict != "missing":
+    if "claim_verifier_tool" not in plan.tools:
         return False
+    if not llm or not llm.available:
+        return False
+    if strong_rule_verdict(plan, rule_verdict, evidence):
+        return False
+    if rule_verdict.verdict != "missing":
+        return True
     real = [item for item in evidence if item.kind != "readme"]
-    return not signal_groups(real)
+    return bool(signal_groups(real)) or plan.claim_type == "unknown"
+
+
+def strong_rule_verdict(plan, rule_verdict, evidence):
+    """Понимает, что LLM можно не дергать."""
+
+    if rule_verdict.verdict == "confirmed" and plan.claim_type in {"docker", "fastapi", "tests"}:
+        return rule_verdict.confidence >= 0.9
+    if rule_verdict.verdict == "missing" and plan.claim_type != "unknown":
+        real = [item for item in evidence if item.kind != "readme"]
+        return not signal_groups(real)
+    return False
 
 
 def verify_by_rules(plan, evidence):
@@ -64,7 +78,7 @@ def verify_by_rules(plan, evidence):
     if not real:
         return ClaimVerdict(
             verdict="missing",
-            confidence=0.2,
+            confidence=missing_confidence(plan),
             reason="Не найдено evidence в коде, зависимостях или конфигах.",
             missing_signals=plan.strong_signals,
         )
@@ -73,7 +87,7 @@ def verify_by_rules(plan, evidence):
     if not groups:
         return ClaimVerdict(
             verdict="missing",
-            confidence=0.25,
+            confidence=missing_confidence(plan),
             reason="Найдены только слабые совпадения, сильных сигналов реализации нет.",
             evidence_used=[],
             missing_signals=plan.strong_signals,
@@ -158,10 +172,18 @@ def confidence_for(verdict, groups):
     """Считает confidence по числу сигналов."""
 
     if verdict == "confirmed":
-        return min(0.95, 0.75 + len(groups) * 0.04)
+        return min(0.95, 0.9 + len(groups) * 0.02)
     if verdict == "partial":
         return min(0.72, 0.42 + len(groups) * 0.05)
     return 0.25
+
+
+def missing_confidence(plan):
+    """Ставит уверенность для понятного missing."""
+
+    if plan.claim_type == "unknown":
+        return 0.35
+    return 0.9
 
 
 def reason_for(claim_type, verdict, groups):

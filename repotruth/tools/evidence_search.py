@@ -102,6 +102,10 @@ def strong_file_hint(expected, claim_type):
     common = {"main.py", "app/main.py", "server.py", "api.py", "routers.py"}
     if expected in common:
         return claim_type in {"fastapi"}
+    if claim_type == "rag":
+        return any(token in expected for token in ["rag", "retriev", "vector", "embed", "chain", "llm"])
+    if claim_type == "telegram_bot":
+        return any(token in expected for token in ["telegram", "bot", "handler"])
     return True
 
 

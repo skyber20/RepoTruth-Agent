@@ -55,18 +55,30 @@ def run_audit(repo_url, claims_path, out_dir, no_llm=False, event=None):
             plan, planner_used = plan_claim(claim, repo_index, llm if not no_llm else None)
             if not planner_used:
                 notes.append(f"{claim.id}: Planner использовал registry fallback. Причина: {llm.last_error or 'LLM отключена.'}")
+            tools = selected_tools(plan)
+            emit(f"{prefix}: Agent выбрал tools: {', '.join(tools)}")
+            tools_used = []
 
-            emit(f"{prefix}: Evidence Search ищет следы...")
-            evidence = search_evidence(repo_path, plan)
-            emit(f"{prefix}: File Context Reader читает контекст...")
-            context_paths = select_context_files(plan, evidence, repo_index)
-            file_contexts = read_file_contexts(repo_path, context_paths, evidence)
+            evidence = []
+            if "repo_evidence_search_tool" in tools:
+                emit(f"{prefix}: Evidence Search ищет следы...")
+                evidence = search_evidence(repo_path, plan)
+                tools_used.append("repo_evidence_search_tool")
+
+            file_contexts = []
+            if "file_context_reader_tool" in tools and evidence:
+                emit(f"{prefix}: File Context Reader читает контекст...")
+                context_paths = select_context_files(plan, evidence, repo_index)
+                file_contexts = read_file_contexts(repo_path, context_paths, evidence)
+                tools_used.append("file_context_reader_tool")
+
             emit(f"{prefix}: Verifier выносит verdict...")
             verdict = verify_claim(claim, plan, evidence, file_contexts, llm if not no_llm else None)
+            tools_used.append("claim_verifier_tool")
             if not verdict.llm_used:
                 notes.append(f"{claim.id}: Verifier использовал rule-based fallback.")
 
-            audits.append(ClaimAudit(claim=claim, plan=plan, evidence=evidence, verdict=verdict))
+            audits.append(ClaimAudit(claim=claim, plan=plan, evidence=evidence, verdict=verdict, tools_used=tools_used))
 
     report = AuditReport(
         repo_url=repo_url,
@@ -92,3 +104,14 @@ def unique(values):
             seen.add(value)
             result.append(value)
     return result
+
+
+def selected_tools(plan):
+    """Возвращает tools, выбранные агентом."""
+
+    tools = [tool for tool in plan.tools if tool in {"repo_evidence_search_tool", "file_context_reader_tool", "claim_verifier_tool"}]
+    if "repo_evidence_search_tool" not in tools:
+        tools.insert(0, "repo_evidence_search_tool")
+    if "claim_verifier_tool" not in tools:
+        tools.append("claim_verifier_tool")
+    return unique(tools)

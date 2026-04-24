@@ -59,9 +59,9 @@ python -m repotruth audit --repo /path/to/local/repo --claims examples/claims_ba
 ```text
 claims.md
   -> LLM Extractor
-  -> LLM Planner
-  -> Python Evidence Search
-  -> LLM Verifier
+  -> LLM Planner + Tool Router
+  -> выбранные tools
+  -> Claim Verifier
   -> Markdown/JSON Report
 ```
 
@@ -70,6 +70,8 @@ claims.md
 RepoTruth использует LLM для динамического планирования проверки.
 
 Например, claim `Есть Telegram-интеграция` не проверяется только словом `telegram`. LLM Planner строит search plan: какие библиотеки, файлы, imports и code patterns нужно искать. Затем Python-инструмент ищет реальные evidence в репозитории, а LLM Verifier выносит verdict только по найденным доказательствам.
+
+Planner также возвращает список tools, которые нужны для claim. Workflow не просто всегда вызывает один и тот же код, а выполняет выбранные инструменты и записывает `tools_used` в отчет. Если rule-based verifier уже нашел сильные доказательства или понятное отсутствие evidence, LLM verifier не вызывается.
 
 ## Evidence Contract
 

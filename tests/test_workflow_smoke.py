@@ -20,5 +20,6 @@ def test_workflow_writes_reports_for_local_repo(tmp_path):
 
     assert report.confirmed_count >= 2
     assert report.missing_count >= 1
+    assert all(audit.tools_used for audit in report.audits)
     assert markdown_path.exists()
     assert json_path.exists()

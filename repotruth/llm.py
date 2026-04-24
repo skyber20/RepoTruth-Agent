@@ -20,7 +20,7 @@ class LLMClient:
     api_key: str | None = None
     model: str | None = None
     timeout: int = 90
-    temperature: float = 0.1
+    temperature: float = 0.0
     last_error: str | None = None
 
     @classmethod
@@ -28,7 +28,7 @@ class LLMClient:
         return cls(
             base_url=os.getenv("OPENAI_BASE_URL"),
             api_key=os.getenv("OPENAI_API_KEY"),
-            model=os.getenv("MODEL_DEFAULT"),
+            model=os.getenv("OPENAI_MODEL") or os.getenv("MODEL_DEFAULT"),
             timeout=int(os.getenv("REPOTRUTH_LLM_TIMEOUT", "90")),
         )
 

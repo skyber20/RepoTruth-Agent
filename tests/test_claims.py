@@ -19,6 +19,8 @@ def test_registry_detects_fastapi():
     assert plan.claim_type == "fastapi"
     assert "fastapi" in plan.dependency_names
     assert "@app.get" in plan.code_patterns
+    assert "repo_evidence_search_tool" in plan.tools
+    assert "claim_verifier_tool" in plan.tools
 
 
 def test_repo_index_makes_plan_use_real_files(tmp_path):

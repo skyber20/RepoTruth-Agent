@@ -10,6 +10,7 @@ CLAIM_EXTRACTOR_PROMPT = """
 }
 
 Правила:
+- Отвечай только на русском языке. Ключи JSON оставляй как в схеме.
 - Разделяй сложные фразы на отдельные claims.
 - Оставляй только то, что можно проверить в GitHub-репозитории.
 - Не добавляй claims от себя.
@@ -34,12 +35,18 @@ CLAIM_PLANNER_PROMPT = """
   "likely_files": ["app/main.py"],
   "dependency_names": ["fastapi"],
   "code_patterns": ["from fastapi import FastAPI", "@app.get", "APIRouter"],
-  "strong_signals": ["dependency", "import", "route"]
+  "strong_signals": ["dependency", "import", "route"],
+  "tools": ["repo_evidence_search_tool", "file_context_reader_tool", "claim_verifier_tool"]
 }
 
 Правила:
+- Отвечай только на русском языке. Ключи JSON оставляй как в схеме.
 - Ищи реальные признаки: файлы, зависимости, imports, конфиги, строки кода.
 - Для likely_files выбирай реальные файлы из repo_index, а не типовые названия.
+- В tools укажи, какие инструменты нужны для проверки claim.
+- repo_evidence_search_tool нужен почти всегда.
+- file_context_reader_tool нужен, если по одной строке трудно понять реализацию.
+- claim_verifier_tool нужен для финального verdict.
 - README-самоописание не является сильным доказательством.
 - Списки должны быть короткими и полезными.
 """
@@ -61,6 +68,7 @@ CLAIM_VERIFIER_PROMPT = """
 }
 
 Правила:
+- Отвечай только на русском языке. Ключи JSON оставляй как в схеме.
 - confirmed: есть сильные доказательства в коде, зависимостях или конфигах.
 - partial: найдена только часть реализации.
 - missing: доказательств нет.

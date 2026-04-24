@@ -27,6 +27,8 @@ def test_missing_when_no_evidence():
     verdict = verify_by_rules(plan, [])
 
     assert verdict.verdict == "missing"
+    assert verdict.confidence == 0.9
+    assert verdict.evidence_used == []
 
 
 def test_verifier_drops_fake_llm_refs():
@@ -49,3 +51,25 @@ def test_verifier_drops_fake_llm_refs():
 
     assert verdict.verdict == "missing"
     assert verdict.evidence_used == []
+
+
+def test_strong_rule_verdict_skips_llm(tmp_path):
+    class FakeLLM:
+        available = True
+
+        def try_complete_json(self, prompt, payload):
+            raise AssertionError("LLM не должна вызываться при сильном rule verdict")
+
+    (tmp_path / "requirements.txt").write_text("fastapi==0.1.0\n", encoding="utf-8")
+    (tmp_path / "main.py").write_text(
+        "from fastapi import FastAPI\napp = FastAPI()\n@app.get('/')\ndef root():\n    return {}\n",
+        encoding="utf-8",
+    )
+    claim = AtomicClaim(id="C1", text="Есть FastAPI backend")
+    plan = registry_plan_for_claim(claim)
+    evidence = search_evidence(tmp_path, plan)
+
+    verdict = verify_claim(claim, plan, evidence, [], FakeLLM())
+
+    assert verdict.verdict == "confirmed"
+    assert not verdict.llm_used

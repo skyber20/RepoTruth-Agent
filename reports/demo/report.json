@@ -1,6 +1,6 @@
 {
   "repo_url": "examples/mock_repo",
-  "generated_at": "2026-04-25 10:49:35 MSK",
+  "generated_at": "2026-04-25 11:24:28 MSK",
   "metadata": {
     "url": "examples/mock_repo",
     "owner": null,
@@ -102,31 +102,33 @@
     {
       "claim": {
         "id": "C2",
-        "text": "Проект запускается в Docker",
+        "text": "Есть telegram интеграция",
         "source_line": 4
       },
       "plan": {
         "claim_id": "C2",
-        "claim_type": "инфраструктура",
+        "claim_type": "интеграция",
         "keywords": [
-          "Dockerfile",
-          "FROM",
-          "docker"
+          "telegram",
+          "aiogram",
+          "telebot",
+          "bot"
         ],
         "likely_files": [
-          "Dockerfile",
+          "app/main.py",
           "requirements.txt"
         ],
-        "dependency_names": [],
+        "dependency_names": [
+          "aiogram",
+          "pyTelegramBotApi"
+        ],
         "code_patterns": [
-          "FROM python",
-          "COPY requirements",
-          "ENTRYPOINT",
-          "CMD"
+          "from telegram import",
+          "import telebot"
         ],
         "strong_signals": [
-          "Фактическое наличие файла Dockerfile в проекте",
-          "Наличие инструкции FROM и команд запуска (CMD/ENTRYPOINT) в содержимом Dockerfile"
+          "Установка Telegram-библиотеки в requirements.txt",
+          "Импорт клиента Telegram в исходном коде"
         ],
         "tools": [
           "repo_evidence_search_tool"
@@ -141,6 +143,59 @@
           "line": null
         },
         {
+          "kind": "code",
+          "path": "app/main.py",
+          "snippet": "from fastapi import FastAPI",
+          "matched_signal": "file",
+          "line": null
+        }
+      ],
+      "verdict": {
+        "verdict": "missing",
+        "confidence": 0.95,
+        "reason": "Evidence содержат только конфигурацию FastAPI, отсутствуют имена зависимостей Telegram или импорты соответствующих библиотек.",
+        "evidence_used": [],
+        "missing_signals": [
+          "Зависимость aiogram или pyTelegramBotApi в requirements.txt",
+          "Импорт модулей telegram в коде"
+        ]
+      },
+      "tools_used": [
+        "repo_evidence_search_tool"
+      ]
+    },
+    {
+      "claim": {
+        "id": "C3",
+        "text": "Проект запускается в Docker",
+        "source_line": 5
+      },
+      "plan": {
+        "claim_id": "C3",
+        "claim_type": "infrastructure",
+        "keywords": [
+          "Dockerfile",
+          "docker",
+          "FROM"
+        ],
+        "likely_files": [
+          "Dockerfile"
+        ],
+        "dependency_names": [],
+        "code_patterns": [
+          "FROM python",
+          "CMD",
+          "ENTRYPOINT"
+        ],
+        "strong_signals": [
+          "Наличие файла Dockerfile с инструкциями сборки образа"
+        ],
+        "tools": [
+          "repo_evidence_search_tool"
+        ]
+      },
+      "evidence": [
+        {
           "kind": "config",
           "path": "Dockerfile",
           "snippet": "FROM python:3.12-slim",
@@ -153,13 +208,6 @@
           "snippet": "FROM python:3.12-slim",
           "matched_signal": "pattern:FROM python",
           "line": 1
-        },
-        {
-          "kind": "config",
-          "path": "Dockerfile",
-          "snippet": "COPY requirements.txt .",
-          "matched_signal": "pattern:COPY requirements",
-          "line": 4
         },
         {
           "kind": "config",
@@ -179,223 +227,12 @@
       "verdict": {
         "verdict": "confirmed",
         "confidence": 0.95,
-        "reason": "Наличие файла Dockerfile с инструкциями FROM python, COPY Requirements и CMD для запуска uvicorn напрямую подтверждает возможность запуска проекта в Docker",
+        "reason": "Файл Dockerfile присутствует с инструкциями FROM python:3.12-slim и CMD для сборки и запуска образа контейнера",
         "evidence_used": [
           "Dockerfile:1",
-          "Dockerfile:4",
           "Dockerfile:7"
         ],
         "missing_signals": []
-      },
-      "tools_used": [
-        "repo_evidence_search_tool"
-      ]
-    },
-    {
-      "claim": {
-        "id": "C3",
-        "text": "Есть telegram интеграция",
-        "source_line": 5
-      },
-      "plan": {
-        "claim_id": "C3",
-        "claim_type": "интеграция",
-        "keywords": [
-          "telegram",
-          "bot_token",
-          "aiogram",
-          "telebot"
-        ],
-        "likely_files": [
-          "requirements.txt",
-          "app/main.py"
-        ],
-        "dependency_names": [],
-        "code_patterns": [
-          "import telegram",
-          "import aiogram",
-          "BOT_TOKEN"
-        ],
-        "strong_signals": [
-          "импорт библиотеки telegram",
-          "использование BOT_TOKEN в коде"
-        ],
-        "tools": [
-          "repo_evidence_search_tool"
-        ]
-      },
-      "evidence": [
-        {
-          "kind": "code",
-          "path": "requirements.txt",
-          "snippet": "fastapi==0.115.0",
-          "matched_signal": "file",
-          "line": null
-        },
-        {
-          "kind": "code",
-          "path": "app/main.py",
-          "snippet": "from fastapi import FastAPI",
-          "matched_signal": "file",
-          "line": null
-        }
-      ],
-      "verdict": {
-        "verdict": "missing",
-        "confidence": 0.9,
-        "reason": "В Evidence отсутствуют подтверждения telegram интеграции: нет импортов библиотек (aiogram, telebot), нет BOT_TOKEN в коде",
-        "evidence_used": [],
-        "missing_signals": [
-          "импорт telegram/aiogram/telebot",
-          "наличие BOT_TOKEN в коде"
-        ]
-      },
-      "tools_used": [
-        "repo_evidence_search_tool"
-      ]
-    },
-    {
-      "claim": {
-        "id": "C4",
-        "text": "Есть тесты",
-        "source_line": 6
-      },
-      "plan": {
-        "claim_id": "C4",
-        "claim_type": "тестирование",
-        "keywords": [
-          "test",
-          "pytest",
-          "unittest"
-        ],
-        "likely_files": [
-          "tests/test_health.py",
-          "requirements.txt"
-        ],
-        "dependency_names": [
-          "pytest"
-        ],
-        "code_patterns": [
-          "def test_",
-          "import pytest"
-        ],
-        "strong_signals": [
-          "существование файла tests/test_health.py",
-          "упоминание pytest в зависимостях"
-        ],
-        "tools": [
-          "repo_evidence_search_tool"
-        ]
-      },
-      "evidence": [
-        {
-          "kind": "code",
-          "path": "requirements.txt",
-          "snippet": "fastapi==0.115.0",
-          "matched_signal": "file",
-          "line": null
-        },
-        {
-          "kind": "code",
-          "path": "tests/test_health.py",
-          "snippet": "def test_health_contract():",
-          "matched_signal": "file",
-          "line": null
-        },
-        {
-          "kind": "dependency",
-          "path": "requirements.txt",
-          "snippet": "pytest==8.3.0",
-          "matched_signal": "dependency:pytest",
-          "line": 3
-        },
-        {
-          "kind": "code",
-          "path": "tests/test_health.py",
-          "snippet": "def test_health_contract():",
-          "matched_signal": "pattern:def test_",
-          "line": 1
-        }
-      ],
-      "verdict": {
-        "verdict": "confirmed",
-        "confidence": 0.95,
-        "reason": "Файл tests/test_health.py содержит функцию def test_health_contract(), что прямо подтверждает наличие специализированных тестов.",
-        "evidence_used": [
-          "tests/test_health.py:1",
-          "tests/test_health.py"
-        ],
-        "missing_signals": []
-      },
-      "tools_used": [
-        "repo_evidence_search_tool"
-      ]
-    },
-    {
-      "claim": {
-        "id": "C5",
-        "text": "Реализован RAG",
-        "source_line": 7
-      },
-      "plan": {
-        "claim_id": "C5",
-        "claim_type": "реализация",
-        "keywords": [
-          "rag",
-          "retrieval",
-          "vector",
-          "embeddings",
-          "context"
-        ],
-        "likely_files": [
-          "app/main.py",
-          "requirements.txt"
-        ],
-        "dependency_names": [
-          "langchain",
-          "llama-index",
-          "chromadb"
-        ],
-        "code_patterns": [
-          "from langchain",
-          "import chromadb",
-          "vector_store"
-        ],
-        "strong_signals": [
-          "импорт RAG-библиотек",
-          "код работы с векторной базой",
-          "вызов функций генерации контекста"
-        ],
-        "tools": [
-          "repo_evidence_search_tool"
-        ]
-      },
-      "evidence": [
-        {
-          "kind": "code",
-          "path": "requirements.txt",
-          "snippet": "fastapi==0.115.0",
-          "matched_signal": "file",
-          "line": null
-        },
-        {
-          "kind": "code",
-          "path": "app/main.py",
-          "snippet": "from fastapi import FastAPI",
-          "matched_signal": "file",
-          "line": null
-        }
-      ],
-      "verdict": {
-        "verdict": "missing",
-        "confidence": 0.95,
-        "reason": "Доказательства ограничиваются базовой настройкой FastAPI. Отсутствуют импорты RAG-библиотек, код работы с векторами или контекстом.",
-        "evidence_used": [],
-        "missing_signals": [
-          "импорты langchain/chromadb",
-          "определение vector_store",
-          "логика retrival"
-        ]
       },
       "tools_used": [
         "repo_evidence_search_tool"

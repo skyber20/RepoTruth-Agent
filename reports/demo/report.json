@@ -1,20 +1,16 @@
 {
-  "repo_url": "https://github.com/skyber20/TODO-matrix",
-  "generated_at": "2026-04-24T14:54:30.027074+00:00",
+  "repo_url": "examples/mock_repo",
+  "generated_at": "2026-04-25 10:49:35 MSK",
   "metadata": {
-    "url": "https://github.com/skyber20/TODO-matrix",
-    "owner": "skyber20",
-    "name": "TODO-matrix",
-    "default_branch": "main",
+    "url": "examples/mock_repo",
+    "owner": null,
+    "name": null,
     "description": null,
-    "languages": {
-      "Python": 13593,
-      "JavaScript": 10593,
-      "CSS": 5699,
-      "HTML": 3242,
-      "Dockerfile": 583
-    },
-    "readme": "## Описание проекта\r\n\r\nПроект представляет собой веб-приложение для управления задачами, построенное на стеке FastAPI и PostgreSQL. Лабораторная работа направлена на автоматизацию процессов разработки с помощью GitLab CI/CD.\r\n\r\n**Технологический стек:**\r\n- **Backend:** FastAPI, SQLAlchemy, Pydantic\r\n- **База данных:** PostgreSQL\r\n- **Контейнеризация:** Docker, Docker Compose\r\n- **CI/CD:** GitLab CI/CD, GitLab Container Registry\r\n- **Тестирование:** pytest, pytest-cov\r\n\r\n## CI/CD Пайплайн\r\n\r\n### Структура пайплайна\r\nПайплайн разделен на четыре последовательных этапа:\r\n\r\n1. **test** — запуск автоматических тестов и анализ покрытия кода\r\n2. **build** — сборка Docker-образа приложения\r\n3. **publish** — публикация образа в GitLab Container Registry\r\n4. **deploy** — имитация процесса развертывания\r\n\r\n### Конфигурация пайплайна\r\nОсновная конфигурация находится в файле .gitlab-ci.yml Ключевые особенности:\r\n- Использование переменных окружения для гибкой настройки\r\n- Кэширование зависимостей Python для ускорения выполнения\r\n- Генерация артефактов: отчеты о тестировании (JUnit) и покрытии кода (Cobertura)\r\n\r\n### Результаты выполнения\r\n- **Статус тестов:** 10 тестов пройдены успешно\r\n- **Покрытие кода:** 88%\r\n- **Сборка Docker:** образ успешно собран и протестирован\r\n- **Публикация:** образ доступен в GitLab Container Registry\r\n- **Ссылка на пайплайн:** https://gitlab.mai.ru/idt-lw/m8o-102bv-25/personal/ARTimoshenko/lab-4/-/pipelines/31639\r\n- **Ссылка на Container Registry: https://gitlab.mai.ru/idt-lw/m8o-102bv-25/personal/ARTimoshenko/lab-4/container_registry/438\r\n## Тестирование\r\n\r\n### Unit-тесты\r\nРеализованы comprehensive unit-тесты для проверки функциональности API:\r\n- Проверка health-эндпоинта (`/health`)\r\n- Тестирование CRUD-операций с задачами:\r\n  - Получение списка задач\r\n  - Добавление новой задачи\r\n  - Обновление статуса задачи\r\n  - Перемещение задачи между квадрантами\r\n  - Удаление задачи\r\n- Тестирование моделей базы данных\r\n\r\n### Инструменты тестирования\r\n- **pytest** — фреймворк для написания и запуска тестов\r\n- **pytest-cov** — измерение покрытия кода\r\n- **FastAPI TestClient** — тестирование HTTP-эндпоинтов\r\n\r\n### Конфигурация тестов\r\n- Использование SQLite in-memory базы данных для изолированного тестирования\r\n- Автоматическое создание и очистка тестовых данных\r\n- Генерация отчетов в форматах JUnit и HTML\r\n\r\n## Работа с Docker\r\n\r\n### Dockerfile\r\nМногоэтапная сборка Docker-образа:\r\n- Этап builder: установка зависимостей и компиляция\r\n- Этап runtime: минимальный образ с приложением\r\n- Оптимизация размера итогового образа\r\n\r\n### Docker Compose\r\nКонфигурация для локальной разработки включает:\r\n- Сервис приложения (FastAPI)\r\n- Сервис базы данных (PostgreSQL)\r\n- Сервис администрирования БД (pgAdmin)\r\n- Настроенные health-check для контроля состояния сервисов\r\n\r\n## Безопасность и конфигурация\r\n\r\n### Управление секретами\r\n- Использование GitLab CI/CD Variables для хранения чувствительных данных\r\n\r\n### Конфигурация базы данных\r\n- Параметры подключения вынесены в переменные окружения\r\n- Автоматическое создание таблиц при инициализации приложения\r\n\r\n## Структура проекта\r\n```bash\r\nlab4/\r\n├── .gitlab-ci.yml                 # Конфигурация CI/CD пайплайна\r\n├── .coveragerc                    # Настройки анализа покрытия кода\r\n├── Dockerfile                     # Конфигурация Docker-образа\r\n├── docker-compose.yml             # Конфигурация Docker Compose для разработки\r\n├── requirements.txt               # Зависимости Python\r\n├── README.md                      # Документация проекта\r\n│\r\n├── app/                           # Основной код приложения\r\n│\r\n└── tests/                         # Модульные и интеграционные тесты\r\n```",
+    "stars": null,
+    "forks": null,
+    "license": null,
+    "topics": [],
+    "languages": {},
     "api_error": null
   },
   "audits": [
@@ -26,244 +22,81 @@
       },
       "plan": {
         "claim_id": "C1",
-        "claim_type": "fastapi",
+        "claim_type": "technology",
         "keywords": [
-          "fastapi",
-          "uvicorn",
-          "backend",
-          "api"
+          "FastAPI"
         ],
         "likely_files": [
           "app/main.py",
-          "tests/test_main.py",
-          "requirements.txt",
-          "run.py"
+          "requirements.txt"
         ],
         "dependency_names": [
-          "fastapi",
-          "uvicorn",
-          "pydantic"
+          "fastapi"
         ],
         "code_patterns": [
           "from fastapi import FastAPI",
-          "import fastapi",
-          "FastAPI(",
-          "@app.get",
-          "@app.post",
-          "APIRouter",
-          "uvicorn.run"
+          "app = FastAPI("
         ],
         "strong_signals": [
-          "dependency",
-          "import",
-          "route"
+          "импорт FastAPI в app/main.py",
+          "присутствие fastapi в requirements.txt"
         ],
         "tools": [
-          "repo_evidence_search_tool",
-          "file_context_reader_tool",
-          "claim_verifier_tool"
+          "repo_evidence_search_tool"
         ]
       },
       "evidence": [
         {
-          "kind": "file",
-          "path": "run.py",
-          "line": 1,
-          "snippet": "if __name__ == '__main__':",
-          "matched_signal": "file:run.py"
-        },
-        {
-          "kind": "file",
+          "kind": "code",
           "path": "requirements.txt",
-          "line": 1,
-          "snippet": "fastapi==0.121.2",
-          "matched_signal": "file:requirements.txt"
+          "snippet": "fastapi==0.115.0",
+          "matched_signal": "file",
+          "line": null
         },
         {
-          "kind": "file",
+          "kind": "code",
           "path": "app/main.py",
-          "line": 1,
-          "snippet": "import logging",
-          "matched_signal": "file:app/main.py"
-        },
-        {
-          "kind": "file",
-          "path": "tests/test_main.py",
-          "line": 1,
-          "snippet": "def test_health(client):",
-          "matched_signal": "file:tests/test_main.py"
+          "snippet": "from fastapi import FastAPI",
+          "matched_signal": "file",
+          "line": null
         },
         {
           "kind": "dependency",
           "path": "requirements.txt",
-          "line": 1,
-          "snippet": "fastapi==0.121.2",
-          "matched_signal": "dependency:fastapi"
-        },
-        {
-          "kind": "dependency",
-          "path": "requirements.txt",
-          "line": 2,
-          "snippet": "pydantic==2.12.4",
-          "matched_signal": "dependency:pydantic"
-        },
-        {
-          "kind": "dependency",
-          "path": "requirements.txt",
-          "line": 3,
-          "snippet": "uvicorn==0.38.0",
-          "matched_signal": "dependency:uvicorn"
-        },
-        {
-          "kind": "code",
-          "path": "run.py",
-          "line": 2,
-          "snippet": "import uvicorn",
-          "matched_signal": "pattern:uvicorn"
-        },
-        {
-          "kind": "code",
-          "path": "run.py",
-          "line": 3,
-          "snippet": "uvicorn.run('app.main:app', host='0.0.0.0', port=8000, reload=True)",
-          "matched_signal": "pattern:uvicorn.run"
-        },
-        {
-          "kind": "code",
-          "path": "requirements.txt",
-          "line": 1,
-          "snippet": "fastapi==0.121.2",
-          "matched_signal": "pattern:fastapi"
-        },
-        {
-          "kind": "code",
-          "path": "requirements.txt",
-          "line": 3,
-          "snippet": "uvicorn==0.38.0",
-          "matched_signal": "pattern:uvicorn"
-        },
-        {
-          "kind": "code",
-          "path": "Dockerfile",
-          "line": 29,
-          "snippet": "CMD [\"uvicorn\", \"app.main:app\", \"--host\", \"0.0.0.0\", \"--port\", \"8000\"]",
-          "matched_signal": "pattern:uvicorn"
-        },
-        {
-          "kind": "readme",
-          "path": "README.md",
-          "line": 3,
-          "snippet": "Проект представляет собой веб-приложение для управления задачами, построенное на стеке FastAPI и PostgreSQL. Лабораторная работа направлена на автоматизацию процессов разработки с помощью GitLab CI/CD.",
-          "matched_signal": "pattern:fastapi"
-        },
-        {
-          "kind": "readme",
-          "path": "README.md",
-          "line": 6,
-          "snippet": "- **Backend:** FastAPI, SQLAlchemy, Pydantic",
-          "matched_signal": "pattern:fastapi"
-        },
-        {
-          "kind": "readme",
-          "path": "README.md",
-          "line": 51,
-          "snippet": "- **FastAPI TestClient** — тестирование HTTP-эндпоинтов",
-          "matched_signal": "pattern:fastapi"
-        },
-        {
-          "kind": "readme",
-          "path": "README.md",
-          "line": 68,
-          "snippet": "- Сервис приложения (FastAPI)",
-          "matched_signal": "pattern:fastapi"
+          "snippet": "fastapi==0.115.0",
+          "matched_signal": "dependency:fastapi",
+          "line": 1
         },
         {
           "kind": "code",
           "path": "app/main.py",
-          "line": 2,
-          "snippet": "from fastapi import FastAPI, Depends",
-          "matched_signal": "pattern:from fastapi import FastAPI"
+          "snippet": "from fastapi import FastAPI",
+          "matched_signal": "pattern:from fastapi import FastAPI",
+          "line": 1
         },
         {
           "kind": "code",
           "path": "app/main.py",
-          "line": 3,
-          "snippet": "from fastapi.staticfiles import StaticFiles",
-          "matched_signal": "pattern:fastapi"
-        },
-        {
-          "kind": "code",
-          "path": "app/main.py",
-          "line": 4,
-          "snippet": "from fastapi.responses import FileResponse",
-          "matched_signal": "pattern:fastapi"
-        },
-        {
-          "kind": "code",
-          "path": "app/main.py",
-          "line": 14,
           "snippet": "app = FastAPI()",
-          "matched_signal": "pattern:FastAPI("
-        },
-        {
-          "kind": "code",
-          "path": "app/main.py",
-          "line": 26,
-          "snippet": "@app.get(\"/\")",
-          "matched_signal": "pattern:@app.get"
-        },
-        {
-          "kind": "code",
-          "path": "app/main.py",
-          "line": 31,
-          "snippet": "@app.get('/get_tasks')",
-          "matched_signal": "pattern:@app.get"
-        },
-        {
-          "kind": "code",
-          "path": "app/main.py",
-          "line": 47,
-          "snippet": "@app.post('/add_task')",
-          "matched_signal": "pattern:@app.post"
-        },
-        {
-          "kind": "code",
-          "path": "app/main.py",
-          "line": 105,
-          "snippet": "@app.get('/health')",
-          "matched_signal": "pattern:@app.get"
-        },
-        {
-          "kind": "code",
-          "path": "tests/conftest.py",
-          "line": 10,
-          "snippet": "from fastapi.testclient import TestClient",
-          "matched_signal": "pattern:fastapi"
+          "matched_signal": "pattern:app = FastAPI(",
+          "line": 4
         }
       ],
       "verdict": {
         "verdict": "confirmed",
         "confidence": 0.95,
-        "reason": "fastapi подтвержден: найдены сильные сигналы (dependency, fastapi_code, route, test_file, test_function).",
+        "reason": "Evidencesa подтверждают наличие FastAPI: import в app/main.py, создание app = FastAPI(), и зависимоть в requirements.txt",
         "evidence_used": [
-          "run.py:1",
+          "requirements.txt",
+          "app/main.py",
           "requirements.txt:1",
           "app/main.py:1",
-          "tests/test_main.py:1",
-          "requirements.txt:2",
-          "requirements.txt:3",
-          "run.py:2",
-          "run.py:3"
+          "app/main.py:4"
         ],
-        "missing_signals": [
-          "import"
-        ],
-        "llm_used": false
+        "missing_signals": []
       },
       "tools_used": [
-        "repo_evidence_search_tool",
-        "file_context_reader_tool",
-        "claim_verifier_tool"
+        "repo_evidence_search_tool"
       ]
     },
     {
@@ -274,866 +107,228 @@
       },
       "plan": {
         "claim_id": "C2",
-        "claim_type": "docker",
+        "claim_type": "инфраструктура",
         "keywords": [
-          "docker",
-          "dockerfile",
-          "compose",
-          "docker-compose",
+          "Dockerfile",
           "FROM",
-          "CMD",
-          "ENTRYPOINT"
+          "docker"
         ],
         "likely_files": [
           "Dockerfile",
-          "docker-compose.yml",
-          ".dockerignore",
           "requirements.txt"
         ],
-        "dependency_names": [
-          "fastapi",
-          "uvicorn",
-          "SQLAlchemy"
-        ],
+        "dependency_names": [],
         "code_patterns": [
-          "services:",
           "FROM python",
-          "COPY . /app",
-          "CMD",
+          "COPY requirements",
           "ENTRYPOINT",
-          "EXPOSE"
+          "CMD"
         ],
         "strong_signals": [
-          "dockerfile",
-          "compose_file",
-          "Файл Dockerfile существует",
-          "Указан базовый образ",
-          "Определена команда запуска"
+          "Фактическое наличие файла Dockerfile в проекте",
+          "Наличие инструкции FROM и команд запуска (CMD/ENTRYPOINT) в содержимом Dockerfile"
         ],
         "tools": [
-          "repo_evidence_search_tool",
-          "file_context_reader_tool",
-          "claim_verifier_tool"
+          "repo_evidence_search_tool"
         ]
       },
       "evidence": [
         {
-          "kind": "file",
+          "kind": "code",
           "path": "requirements.txt",
-          "line": 1,
-          "snippet": "fastapi==0.121.2",
-          "matched_signal": "file:requirements.txt"
+          "snippet": "fastapi==0.115.0",
+          "matched_signal": "file",
+          "line": null
         },
         {
           "kind": "config",
           "path": "Dockerfile",
-          "line": 1,
-          "snippet": "FROM python:3.12-alpine AS builder",
-          "matched_signal": "file:Dockerfile"
-        },
-        {
-          "kind": "file",
-          "path": ".dockerignore",
-          "line": 1,
-          "snippet": ".venv/",
-          "matched_signal": "file:.dockerignore"
+          "snippet": "FROM python:3.12-slim",
+          "matched_signal": "file",
+          "line": null
         },
         {
           "kind": "config",
-          "path": "docker-compose.yml",
-          "line": 1,
-          "snippet": "services:",
-          "matched_signal": "file:docker-compose.yml"
-        },
-        {
-          "kind": "dependency",
-          "path": "requirements.txt",
-          "line": 1,
-          "snippet": "fastapi==0.121.2",
-          "matched_signal": "dependency:fastapi"
-        },
-        {
-          "kind": "dependency",
-          "path": "requirements.txt",
-          "line": 3,
-          "snippet": "uvicorn==0.38.0",
-          "matched_signal": "dependency:uvicorn"
-        },
-        {
-          "kind": "dependency",
-          "path": "requirements.txt",
-          "line": 5,
-          "snippet": "SQLAlchemy==2.0.45",
-          "matched_signal": "dependency:SQLAlchemy"
-        },
-        {
-          "kind": "code",
           "path": "Dockerfile",
-          "line": 1,
-          "snippet": "FROM python:3.12-alpine AS builder",
-          "matched_signal": "pattern:FROM python"
+          "snippet": "FROM python:3.12-slim",
+          "matched_signal": "pattern:FROM python",
+          "line": 1
         },
         {
-          "kind": "code",
+          "kind": "config",
           "path": "Dockerfile",
-          "line": 10,
-          "snippet": "FROM python:3.12-alpine",
-          "matched_signal": "pattern:FROM python"
+          "snippet": "COPY requirements.txt .",
+          "matched_signal": "pattern:COPY requirements",
+          "line": 4
         },
         {
-          "kind": "code",
+          "kind": "config",
           "path": "Dockerfile",
-          "line": 27,
-          "snippet": "EXPOSE 8000",
-          "matched_signal": "pattern:EXPOSE"
-        },
-        {
-          "kind": "code",
-          "path": "Dockerfile",
-          "line": 29,
           "snippet": "CMD [\"uvicorn\", \"app.main:app\", \"--host\", \"0.0.0.0\", \"--port\", \"8000\"]",
-          "matched_signal": "pattern:CMD"
+          "matched_signal": "pattern:CMD",
+          "line": 7
         },
         {
-          "kind": "readme",
-          "path": "README.md",
-          "line": 8,
-          "snippet": "- **Контейнеризация:** Docker, Docker Compose",
-          "matched_signal": "pattern:docker"
-        },
-        {
-          "kind": "readme",
-          "path": "README.md",
-          "line": 18,
-          "snippet": "2. **build** — сборка Docker-образа приложения",
-          "matched_signal": "pattern:docker"
-        },
-        {
-          "kind": "readme",
-          "path": "README.md",
-          "line": 31,
-          "snippet": "- **Сборка Docker:** образ успешно собран и протестирован",
-          "matched_signal": "pattern:docker"
-        },
-        {
-          "kind": "readme",
-          "path": "README.md",
-          "line": 58,
-          "snippet": "## Работа с Docker",
-          "matched_signal": "pattern:docker"
-        },
-        {
-          "kind": "readme",
-          "path": "README.md",
-          "line": 60,
-          "snippet": "### Dockerfile",
-          "matched_signal": "pattern:docker"
-        },
-        {
-          "kind": "readme",
-          "path": "README.md",
-          "line": 61,
-          "snippet": "Многоэтапная сборка Docker-образа:",
-          "matched_signal": "pattern:docker"
-        },
-        {
-          "kind": "readme",
-          "path": "README.md",
-          "line": 66,
-          "snippet": "### Docker Compose",
-          "matched_signal": "pattern:docker"
-        },
-        {
-          "kind": "readme",
-          "path": "README.md",
-          "line": 87,
-          "snippet": "├── Dockerfile                     # Конфигурация Docker-образа",
-          "matched_signal": "pattern:docker"
-        },
-        {
-          "kind": "readme",
-          "path": "README.md",
-          "line": 88,
-          "snippet": "├── docker-compose.yml             # Конфигурация Docker Compose для разработки",
-          "matched_signal": "pattern:docker"
-        },
-        {
-          "kind": "config",
-          "path": "docker-compose.yml",
-          "line": 16,
-          "snippet": "test: [\"CMD-SHELL\", \"pg_isready -U ${POSTGRES_USER}\"]",
-          "matched_signal": "pattern:CMD"
-        },
-        {
-          "kind": "config",
-          "path": "docker-compose.yml",
-          "line": 59,
-          "snippet": "test: [ \"CMD-SHELL\", \"wget -qO- http://localhost:8000/health || exit 1\" ]",
-          "matched_signal": "pattern:CMD"
-        },
-        {
-          "kind": "config",
-          "path": ".gitlab-ci.yml",
-          "line": 7,
-          "snippet": "DOCKER_TLS_CERTDIR: \"/certs\"",
-          "matched_signal": "pattern:docker"
-        },
-        {
-          "kind": "config",
-          "path": ".gitlab-ci.yml",
-          "line": 37,
-          "snippet": "image: docker:24.0",
-          "matched_signal": "pattern:docker"
-        },
-        {
-          "kind": "config",
-          "path": ".gitlab-ci.yml",
-          "line": 38,
-          "snippet": "services:",
-          "matched_signal": "pattern:services:"
-        },
-        {
-          "kind": "config",
-          "path": ".gitlab-ci.yml",
-          "line": 39,
-          "snippet": "- docker:24.0-dind",
-          "matched_signal": "pattern:docker"
-        },
-        {
-          "kind": "config",
-          "path": ".gitlab-ci.yml",
-          "line": 41,
-          "snippet": "- docker build -t $IMAGE_TAG .",
-          "matched_signal": "pattern:docker"
-        },
-        {
-          "kind": "config",
-          "path": ".gitlab-ci.yml",
-          "line": 48,
-          "snippet": "image: docker:24.0",
-          "matched_signal": "pattern:docker"
-        },
-        {
-          "kind": "config",
-          "path": ".gitlab-ci.yml",
-          "line": 49,
-          "snippet": "services:",
-          "matched_signal": "pattern:services:"
-        },
-        {
-          "kind": "config",
-          "path": ".gitlab-ci.yml",
-          "line": 50,
-          "snippet": "- docker:24.0-dind",
-          "matched_signal": "pattern:docker"
-        },
-        {
-          "kind": "config",
-          "path": ".gitlab-ci.yml",
-          "line": 52,
-          "snippet": "- docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY",
-          "matched_signal": "pattern:docker"
-        },
-        {
-          "kind": "config",
-          "path": ".gitlab-ci.yml",
-          "line": 54,
-          "snippet": "- docker tag $IMAGE_TAG $LATEST_TAG",
-          "matched_signal": "pattern:docker"
-        },
-        {
-          "kind": "config",
-          "path": ".gitlab-ci.yml",
-          "line": 55,
-          "snippet": "- docker push $IMAGE_TAG",
-          "matched_signal": "pattern:docker"
-        },
-        {
-          "kind": "config",
-          "path": ".gitlab-ci.yml",
-          "line": 56,
-          "snippet": "- docker push $LATEST_TAG",
-          "matched_signal": "pattern:docker"
+          "kind": "code",
+          "path": "app/main.py",
+          "snippet": "from fastapi import FastAPI",
+          "matched_signal": "pattern:FROM",
+          "line": 1
         }
       ],
       "verdict": {
         "verdict": "confirmed",
         "confidence": 0.95,
-        "reason": "docker подтвержден: найдены сильные сигналы (dependency, docker_file, fastapi_code).",
+        "reason": "Наличие файла Dockerfile с инструкциями FROM python, COPY Requirements и CMD для запуска uvicorn напрямую подтверждает возможность запуска проекта в Docker",
         "evidence_used": [
-          "requirements.txt:1",
           "Dockerfile:1",
-          ".dockerignore:1",
-          "docker-compose.yml:1",
-          "requirements.txt:3",
-          "requirements.txt:5",
-          "Dockerfile:10",
-          "Dockerfile:27"
+          "Dockerfile:4",
+          "Dockerfile:7"
         ],
-        "missing_signals": [
-          "dockerfile",
-          "compose_file",
-          "Файл Dockerfile существует",
-          "Указан базовый образ",
-          "Определена команда запуска"
-        ],
-        "llm_used": false
+        "missing_signals": []
       },
       "tools_used": [
-        "repo_evidence_search_tool",
-        "file_context_reader_tool",
-        "claim_verifier_tool"
+        "repo_evidence_search_tool"
       ]
     },
     {
       "claim": {
         "id": "C3",
-        "text": "Есть тесты",
+        "text": "Есть telegram интеграция",
         "source_line": 5
       },
       "plan": {
         "claim_id": "C3",
-        "claim_type": "tests",
+        "claim_type": "интеграция",
         "keywords": [
-          "pytest",
-          "unittest",
-          "assert ",
-          "test_"
+          "telegram",
+          "bot_token",
+          "aiogram",
+          "telebot"
         ],
         "likely_files": [
-          "tests/conftest.py",
-          "tests/test_database.py",
-          "tests/__init__.py",
-          "tests/test_main.py"
+          "requirements.txt",
+          "app/main.py"
         ],
-        "dependency_names": [
-          "pytest",
-          "unittest"
-        ],
+        "dependency_names": [],
         "code_patterns": [
-          "def test_",
-          "class Test",
-          "pytest",
-          "unittest"
+          "import telegram",
+          "import aiogram",
+          "BOT_TOKEN"
         ],
         "strong_signals": [
-          "test_file",
-          "test_function"
+          "импорт библиотеки telegram",
+          "использование BOT_TOKEN в коде"
         ],
         "tools": [
-          "repo_evidence_search_tool",
-          "file_context_reader_tool",
-          "claim_verifier_tool"
+          "repo_evidence_search_tool"
         ]
       },
       "evidence": [
         {
-          "kind": "file",
-          "path": "tests/conftest.py",
-          "line": 1,
-          "snippet": "import os",
-          "matched_signal": "file:tests/conftest.py"
-        },
-        {
-          "kind": "file",
-          "path": "tests/test_database.py",
-          "line": 1,
-          "snippet": "import pytest",
-          "matched_signal": "file:tests/test_database.py"
-        },
-        {
-          "kind": "file",
-          "path": "tests/__init__.py",
-          "line": null,
-          "snippet": "file exists: tests/__init__.py",
-          "matched_signal": "file:tests/__init__.py"
-        },
-        {
-          "kind": "file",
-          "path": "tests/test_main.py",
-          "line": 1,
-          "snippet": "def test_health(client):",
-          "matched_signal": "file:tests/test_main.py"
-        },
-        {
-          "kind": "dependency",
-          "path": "requirements.txt",
-          "line": 9,
-          "snippet": "pytest==9.0.2",
-          "matched_signal": "dependency:pytest"
-        },
-        {
           "kind": "code",
           "path": "requirements.txt",
-          "line": 9,
-          "snippet": "pytest==9.0.2",
-          "matched_signal": "pattern:pytest"
+          "snippet": "fastapi==0.115.0",
+          "matched_signal": "file",
+          "line": null
         },
         {
           "kind": "code",
-          "path": "requirements.txt",
-          "line": 17,
-          "snippet": "pytest-cov==7.0.0",
-          "matched_signal": "pattern:pytest"
-        },
-        {
-          "kind": "readme",
-          "path": "README.md",
-          "line": 10,
-          "snippet": "- **Тестирование:** pytest, pytest-cov",
-          "matched_signal": "pattern:pytest"
-        },
-        {
-          "kind": "readme",
-          "path": "README.md",
-          "line": 49,
-          "snippet": "- **pytest** — фреймворк для написания и запуска тестов",
-          "matched_signal": "pattern:pytest"
-        },
-        {
-          "kind": "readme",
-          "path": "README.md",
-          "line": 50,
-          "snippet": "- **pytest-cov** — измерение покрытия кода",
-          "matched_signal": "pattern:pytest"
-        },
-        {
-          "kind": "config",
-          "path": ".gitlab-ci.yml",
-          "line": 9,
-          "snippet": "LATEST_TAG: $CI_REGISTRY_IMAGE:latest",
-          "matched_signal": "pattern:test_"
-        },
-        {
-          "kind": "config",
-          "path": ".gitlab-ci.yml",
-          "line": 17,
-          "snippet": "- pip install pytest pytest-cov httpx",
-          "matched_signal": "pattern:pytest"
-        },
-        {
-          "kind": "config",
-          "path": ".gitlab-ci.yml",
-          "line": 21,
-          "snippet": "- python -m pytest tests/ -v --cov=app --cov-report=xml --cov-report=html --junitxml=junit.xml --cov-fail-under=70",
-          "matched_signal": "pattern:pytest"
-        },
-        {
-          "kind": "config",
-          "path": ".gitlab-ci.yml",
-          "line": 54,
-          "snippet": "- docker tag $IMAGE_TAG $LATEST_TAG",
-          "matched_signal": "pattern:test_"
-        },
-        {
-          "kind": "config",
-          "path": ".gitlab-ci.yml",
-          "line": 56,
-          "snippet": "- docker push $LATEST_TAG",
-          "matched_signal": "pattern:test_"
-        },
-        {
-          "kind": "code",
-          "path": "tests/conftest.py",
-          "line": 9,
-          "snippet": "import pytest",
-          "matched_signal": "pattern:pytest"
-        },
-        {
-          "kind": "code",
-          "path": "tests/conftest.py",
-          "line": 22,
-          "snippet": "@pytest.fixture(scope=\"function\")",
-          "matched_signal": "pattern:pytest"
-        },
-        {
-          "kind": "code",
-          "path": "tests/conftest.py",
-          "line": 37,
-          "snippet": "with TestClient(app) as test_client:",
-          "matched_signal": "pattern:test_"
-        },
-        {
-          "kind": "code",
-          "path": "tests/conftest.py",
-          "line": 38,
-          "snippet": "yield test_client",
-          "matched_signal": "pattern:test_"
-        },
-        {
-          "kind": "code",
-          "path": "tests/conftest.py",
-          "line": 42,
-          "snippet": "def pytest_sessionfinish(session, exitstatus):",
-          "matched_signal": "pattern:pytest"
-        },
-        {
-          "kind": "code",
-          "path": "tests/test_database.py",
-          "line": 1,
-          "snippet": "import pytest",
-          "matched_signal": "pattern:pytest"
-        },
-        {
-          "kind": "code",
-          "path": "tests/test_database.py",
-          "line": 7,
-          "snippet": "def test_taskdb_model():",
-          "matched_signal": "pattern:def test_"
-        },
-        {
-          "kind": "code",
-          "path": "tests/test_database.py",
-          "line": 15,
-          "snippet": "assert task.id == 1",
-          "matched_signal": "pattern:assert"
-        },
-        {
-          "kind": "code",
-          "path": "tests/test_database.py",
-          "line": 16,
-          "snippet": "assert task.text == \"Тестовая задача\"",
-          "matched_signal": "pattern:assert"
-        },
-        {
-          "kind": "code",
-          "path": "tests/test_database.py",
-          "line": 17,
-          "snippet": "assert task.quadrant == 1",
-          "matched_signal": "pattern:assert"
-        },
-        {
-          "kind": "code",
-          "path": "tests/test_database.py",
-          "line": 18,
-          "snippet": "assert task.done is False",
-          "matched_signal": "pattern:assert"
-        },
-        {
-          "kind": "code",
-          "path": "tests/test_database.py",
-          "line": 21,
-          "snippet": "def test_database_tables():",
-          "matched_signal": "pattern:def test_"
-        },
-        {
-          "kind": "code",
-          "path": "tests/test_database.py",
-          "line": 27,
-          "snippet": "assert \"tasks\" in tables",
-          "matched_signal": "pattern:assert"
-        },
-        {
-          "kind": "code",
-          "path": "tests/test_database.py",
-          "line": 32,
-          "snippet": "def test_get_db():",
-          "matched_signal": "pattern:def test_"
-        },
-        {
-          "kind": "code",
-          "path": "tests/test_database.py",
-          "line": 39,
-          "snippet": "assert db is not None",
-          "matched_signal": "pattern:assert"
-        },
-        {
-          "kind": "code",
-          "path": "tests/test_database.py",
-          "line": 40,
-          "snippet": "assert hasattr(db, \"query\")",
-          "matched_signal": "pattern:assert"
-        },
-        {
-          "kind": "code",
-          "path": "tests/test_main.py",
-          "line": 1,
-          "snippet": "def test_health(client):",
-          "matched_signal": "pattern:def test_"
-        },
-        {
-          "kind": "code",
-          "path": "tests/test_main.py",
-          "line": 4,
-          "snippet": "assert response.status_code == 200",
-          "matched_signal": "pattern:assert"
-        },
-        {
-          "kind": "code",
-          "path": "tests/test_main.py",
-          "line": 5,
-          "snippet": "assert response.json() == {\"status\": \"healthy\"}",
-          "matched_signal": "pattern:assert"
-        },
-        {
-          "kind": "code",
-          "path": "tests/test_main.py",
-          "line": 8,
-          "snippet": "def test_get_tasks_empty(client):",
-          "matched_signal": "pattern:def test_"
-        },
-        {
-          "kind": "code",
-          "path": "tests/test_main.py",
-          "line": 11,
-          "snippet": "assert response.status_code == 200",
-          "matched_signal": "pattern:assert"
-        },
-        {
-          "kind": "code",
-          "path": "tests/test_main.py",
-          "line": 12,
-          "snippet": "assert response.json() == []",
-          "matched_signal": "pattern:assert"
-        },
-        {
-          "kind": "code",
-          "path": "tests/test_main.py",
-          "line": 15,
-          "snippet": "def test_add_task(client):",
-          "matched_signal": "pattern:def test_"
-        },
-        {
-          "kind": "code",
-          "path": "tests/test_main.py",
-          "line": 18,
-          "snippet": "assert response.status_code == 200",
-          "matched_signal": "pattern:assert"
-        },
-        {
-          "kind": "code",
-          "path": "tests/test_main.py",
-          "line": 20,
-          "snippet": "assert data[\"text\"] == \"Тестовая задача\"",
-          "matched_signal": "pattern:assert"
-        },
-        {
-          "kind": "code",
-          "path": "tests/test_main.py",
-          "line": 21,
-          "snippet": "assert data[\"quadrant\"] == 1",
-          "matched_signal": "pattern:assert"
-        },
-        {
-          "kind": "code",
-          "path": "tests/test_main.py",
-          "line": 22,
-          "snippet": "assert data[\"done\"] is False",
-          "matched_signal": "pattern:assert"
-        },
-        {
-          "kind": "code",
-          "path": "tests/test_main.py",
-          "line": 23,
-          "snippet": "assert \"id\" in data",
-          "matched_signal": "pattern:assert"
-        },
-        {
-          "kind": "code",
-          "path": "tests/test_main.py",
-          "line": 26,
-          "snippet": "def test_get_tasks_with_data(client):",
-          "matched_signal": "pattern:def test_"
-        },
-        {
-          "kind": "code",
-          "path": "tests/test_main.py",
-          "line": 32,
-          "snippet": "assert response.status_code == 200",
-          "matched_signal": "pattern:assert"
-        },
-        {
-          "kind": "code",
-          "path": "tests/test_main.py",
-          "line": 34,
-          "snippet": "assert len(tasks) == 1",
-          "matched_signal": "pattern:assert"
-        },
-        {
-          "kind": "code",
-          "path": "tests/test_main.py",
-          "line": 35,
-          "snippet": "assert tasks[0][\"id\"] == task[\"id\"]",
-          "matched_signal": "pattern:assert"
-        },
-        {
-          "kind": "code",
-          "path": "tests/test_main.py",
-          "line": 36,
-          "snippet": "assert tasks[0][\"text\"] == \"Тестовая задача\"",
-          "matched_signal": "pattern:assert"
-        },
-        {
-          "kind": "code",
-          "path": "tests/test_main.py",
-          "line": 39,
-          "snippet": "def test_update_done_task(client):",
-          "matched_signal": "pattern:def test_"
-        },
-        {
-          "kind": "code",
-          "path": "tests/test_main.py",
-          "line": 46,
-          "snippet": "assert response.status_code == 200",
-          "matched_signal": "pattern:assert"
-        },
-        {
-          "kind": "code",
-          "path": "tests/test_main.py",
-          "line": 50,
-          "snippet": "assert tasks[0][\"done\"] is True",
-          "matched_signal": "pattern:assert"
-        },
-        {
-          "kind": "code",
-          "path": "tests/test_main.py",
-          "line": 53,
-          "snippet": "def test_move_task(client):",
-          "matched_signal": "pattern:def test_"
-        },
-        {
-          "kind": "code",
-          "path": "tests/test_main.py",
-          "line": 56,
-          "snippet": "assert response.status_code == 200",
-          "matched_signal": "pattern:assert"
-        },
-        {
-          "kind": "code",
-          "path": "tests/test_main.py",
-          "line": 61,
-          "snippet": "assert response.status_code in [200, 204]",
-          "matched_signal": "pattern:assert"
-        },
-        {
-          "kind": "code",
-          "path": "tests/test_main.py",
-          "line": 64,
-          "snippet": "assert response.status_code == 200",
-          "matched_signal": "pattern:assert"
-        },
-        {
-          "kind": "code",
-          "path": "tests/test_main.py",
-          "line": 73,
-          "snippet": "assert moved_task is not None, f\"Задача с ID {task_id} не найдена\"",
-          "matched_signal": "pattern:assert"
-        },
-        {
-          "kind": "code",
-          "path": "tests/test_main.py",
-          "line": 74,
-          "snippet": "assert moved_task[\"quadrant\"] == 2, f\"Квадрант должен быть 2, а получили {moved_task['quadrant']}\"",
-          "matched_signal": "pattern:assert"
-        },
-        {
-          "kind": "code",
-          "path": "tests/test_main.py",
-          "line": 77,
-          "snippet": "def test_delete_task(client):",
-          "matched_signal": "pattern:def test_"
-        },
-        {
-          "kind": "code",
-          "path": "tests/test_main.py",
-          "line": 84,
-          "snippet": "assert response.status_code == 200",
-          "matched_signal": "pattern:assert"
-        },
-        {
-          "kind": "code",
-          "path": "tests/test_main.py",
-          "line": 88,
-          "snippet": "assert len(tasks) == 0",
-          "matched_signal": "pattern:assert"
+          "path": "app/main.py",
+          "snippet": "from fastapi import FastAPI",
+          "matched_signal": "file",
+          "line": null
         }
       ],
       "verdict": {
-        "verdict": "confirmed",
-        "confidence": 0.95,
-        "reason": "tests подтвержден: найдены сильные сигналы (dependency, test_file, test_function).",
-        "evidence_used": [
-          "tests/conftest.py:1",
-          "tests/test_database.py:1",
-          "tests/test_main.py:1",
-          "requirements.txt:9",
-          "requirements.txt:17",
-          ".gitlab-ci.yml:9",
-          ".gitlab-ci.yml:17",
-          ".gitlab-ci.yml:21"
-        ],
-        "missing_signals": [],
-        "llm_used": false
+        "verdict": "missing",
+        "confidence": 0.9,
+        "reason": "В Evidence отсутствуют подтверждения telegram интеграции: нет импортов библиотек (aiogram, telebot), нет BOT_TOKEN в коде",
+        "evidence_used": [],
+        "missing_signals": [
+          "импорт telegram/aiogram/telebot",
+          "наличие BOT_TOKEN в коде"
+        ]
       },
       "tools_used": [
-        "repo_evidence_search_tool",
-        "file_context_reader_tool",
-        "claim_verifier_tool"
+        "repo_evidence_search_tool"
       ]
     },
     {
       "claim": {
         "id": "C4",
-        "text": "Есть Telegram-интеграция",
+        "text": "Есть тесты",
         "source_line": 6
       },
       "plan": {
         "claim_id": "C4",
-        "claim_type": "telegram_bot",
+        "claim_type": "тестирование",
         "keywords": [
-          "telegram",
-          "bot",
-          "aiogram",
-          "telebot",
-          "python-telegram-bot"
+          "test",
+          "pytest",
+          "unittest"
         ],
         "likely_files": [
-          "app/main.py",
-          "tests/test_main.py"
+          "tests/test_health.py",
+          "requirements.txt"
         ],
         "dependency_names": [
-          "aiogram",
-          "pyTelegramBotAPI",
-          "python-telegram-bot",
-          "telebot"
+          "pytest"
         ],
         "code_patterns": [
-          "Bot(",
-          "Dispatcher",
-          "message_handler",
-          "callback_query",
-          "polling",
-          "webhook",
-          "TELEGRAM_TOKEN",
-          "BOT_TOKEN"
+          "def test_",
+          "import pytest"
         ],
         "strong_signals": [
-          "dependency",
-          "bot_initialization",
-          "handler"
+          "существование файла tests/test_health.py",
+          "упоминание pytest в зависимостях"
         ],
         "tools": [
-          "repo_evidence_search_tool",
-          "file_context_reader_tool",
-          "claim_verifier_tool"
+          "repo_evidence_search_tool"
         ]
       },
-      "evidence": [],
+      "evidence": [
+        {
+          "kind": "code",
+          "path": "requirements.txt",
+          "snippet": "fastapi==0.115.0",
+          "matched_signal": "file",
+          "line": null
+        },
+        {
+          "kind": "code",
+          "path": "tests/test_health.py",
+          "snippet": "def test_health_contract():",
+          "matched_signal": "file",
+          "line": null
+        },
+        {
+          "kind": "dependency",
+          "path": "requirements.txt",
+          "snippet": "pytest==8.3.0",
+          "matched_signal": "dependency:pytest",
+          "line": 3
+        },
+        {
+          "kind": "code",
+          "path": "tests/test_health.py",
+          "snippet": "def test_health_contract():",
+          "matched_signal": "pattern:def test_",
+          "line": 1
+        }
+      ],
       "verdict": {
-        "verdict": "missing",
-        "confidence": 0.9,
-        "reason": "Не найдено evidence в коде, зависимостях или конфигах.",
-        "evidence_used": [],
-        "missing_signals": [
-          "dependency",
-          "bot_initialization",
-          "handler"
+        "verdict": "confirmed",
+        "confidence": 0.95,
+        "reason": "Файл tests/test_health.py содержит функцию def test_health_contract(), что прямо подтверждает наличие специализированных тестов.",
+        "evidence_used": [
+          "tests/test_health.py:1",
+          "tests/test_health.py"
         ],
-        "llm_used": false
+        "missing_signals": []
       },
       "tools_used": [
-        "repo_evidence_search_tool",
-        "claim_verifier_tool"
+        "repo_evidence_search_tool"
       ]
     },
     {
@@ -1144,102 +339,69 @@
       },
       "plan": {
         "claim_id": "C5",
-        "claim_type": "rag",
+        "claim_type": "реализация",
         "keywords": [
           "rag",
           "retrieval",
-          "embedding",
           "vector",
-          "context",
-          "documents",
-          "llm",
-          "chunk"
+          "embeddings",
+          "context"
         ],
         "likely_files": [
-          "app/static/index.html",
           "app/main.py",
-          "app/work_with_database.py",
-          "requirements.txt",
-          "app/models/task.py"
+          "requirements.txt"
         ],
         "dependency_names": [
           "langchain",
           "llama-index",
-          "chromadb",
-          "faiss-cpu",
-          "qdrant-client",
-          "pinecone-client",
-          "sentence-transformers",
-          "pinecone",
-          "openai"
-        ],
-        "code_patterns": [
-          "OpenAIEmbeddings",
-          "HuggingFaceEmbeddings",
-          "SentenceTransformer",
-          "Chroma",
-          "FAISS",
-          "Qdrant",
-          "Pinecone",
-          "similarity_search",
-          "as_retriever",
-          "retriever",
-          "chunk_size",
-          "RecursiveCharacterTextSplitter",
-          "context",
-          "retrieved_docs",
-          "import langchain",
-          "from langchain",
-          "embed_documents",
-          "vectorstore",
           "chromadb"
         ],
+        "code_patterns": [
+          "from langchain",
+          "import chromadb",
+          "vector_store"
+        ],
         "strong_signals": [
-          "embeddings",
-          "vector_store",
-          "retrieval",
-          "context_in_prompt",
-          "import",
-          "dependency",
-          "function_call"
+          "импорт RAG-библиотек",
+          "код работы с векторной базой",
+          "вызов функций генерации контекста"
         ],
         "tools": [
-          "repo_evidence_search_tool",
-          "file_context_reader_tool",
-          "claim_verifier_tool"
+          "repo_evidence_search_tool"
         ]
       },
-      "evidence": [],
+      "evidence": [
+        {
+          "kind": "code",
+          "path": "requirements.txt",
+          "snippet": "fastapi==0.115.0",
+          "matched_signal": "file",
+          "line": null
+        },
+        {
+          "kind": "code",
+          "path": "app/main.py",
+          "snippet": "from fastapi import FastAPI",
+          "matched_signal": "file",
+          "line": null
+        }
+      ],
       "verdict": {
         "verdict": "missing",
-        "confidence": 0.9,
-        "reason": "Не найдено evidence в коде, зависимостях или конфигах.",
+        "confidence": 0.95,
+        "reason": "Доказательства ограничиваются базовой настройкой FastAPI. Отсутствуют импорты RAG-библиотек, код работы с векторами или контекстом.",
         "evidence_used": [],
         "missing_signals": [
-          "embeddings",
-          "vector_store",
-          "retrieval",
-          "context_in_prompt",
-          "import",
-          "dependency",
-          "function_call"
-        ],
-        "llm_used": false
+          "импорты langchain/chromadb",
+          "определение vector_store",
+          "логика retrival"
+        ]
       },
       "tools_used": [
-        "repo_evidence_search_tool",
-        "claim_verifier_tool"
+        "repo_evidence_search_tool"
       ]
     }
   ],
   "llm_model": "qwen3.5-122b",
-  "notes": [
-    "C1: Verifier использовал rule-based fallback.",
-    "C2: Verifier использовал rule-based fallback.",
-    "C3: Planner использовал registry fallback. Причина: The read operation timed out",
-    "C3: Verifier использовал rule-based fallback.",
-    "C4: Planner использовал registry fallback. Причина: LLM недоступна: <urlopen error _ssl.c:1063: The handshake operation timed out>",
-    "C4: Verifier использовал rule-based fallback.",
-    "C5: Verifier использовал rule-based fallback."
-  ]
+  "notes": []
 }

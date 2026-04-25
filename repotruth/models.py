@@ -1,21 +1,17 @@
 from pydantic import BaseModel, ConfigDict, Field
 
 
-class AtomicClaim(BaseModel):
-    """Одно проверяемое утверждение."""
-
+class Model(BaseModel):
     model_config = ConfigDict(extra="ignore")
 
+
+class AtomicClaim(Model):
     id: str
     text: str
     source_line: int | None = None
 
 
-class SearchPlan(BaseModel):
-    """План поиска доказательств."""
-
-    model_config = ConfigDict(extra="ignore")
-
+class SearchPlan(Model):
     claim_id: str
     claim_type: str = "unknown"
     keywords: list[str] = Field(default_factory=list)
@@ -26,84 +22,57 @@ class SearchPlan(BaseModel):
     tools: list[str] = Field(default_factory=list)
 
 
-class EvidenceItem(BaseModel):
-    """Найденное доказательство."""
-
-    model_config = ConfigDict(extra="ignore")
-
+class EvidenceItem(Model):
     kind: str
     path: str
-    line: int | None = None
     snippet: str
     matched_signal: str
+    line: int | None = None
 
     @property
     def ref(self):
-        if self.line:
-            return f"{self.path}:{self.line}"
-        return self.path
+        return f"{self.path}:{self.line}" if self.line else self.path
 
 
-class ClaimVerdict(BaseModel):
-    """Вердикт по одному утверждению."""
-
-    model_config = ConfigDict(extra="ignore")
-
+class ClaimVerdict(Model):
     verdict: str
     confidence: float
     reason: str
     evidence_used: list[str] = Field(default_factory=list)
     missing_signals: list[str] = Field(default_factory=list)
-    llm_used: bool = False
 
 
-class RepoMetadata(BaseModel):
-    """Краткая информация о репозитории."""
-
-    model_config = ConfigDict(extra="ignore")
-
+class RepoMetadata(Model):
     url: str
     owner: str | None = None
     name: str | None = None
-    default_branch: str | None = None
     description: str | None = None
+    stars: int | None = None
+    forks: int | None = None
+    license: str | None = None
+    topics: list[str] = Field(default_factory=list)
     languages: dict[str, int] = Field(default_factory=dict)
-    readme: str | None = None
     api_error: str | None = None
 
 
-class RepoIndex(BaseModel):
-    """Карта реальных файлов репозитория."""
-
-    model_config = ConfigDict(extra="ignore")
-
-    file_count: int
+class RepoIndex(Model):
     files: list[str] = Field(default_factory=list)
-    important_files: list[str] = Field(default_factory=list)
     dependencies: list[str] = Field(default_factory=list)
 
 
-class ClaimAudit(BaseModel):
-    """Полная проверка одного утверждения."""
-
-    model_config = ConfigDict(extra="ignore")
-
+class ClaimAudit(Model):
     claim: AtomicClaim
     plan: SearchPlan
-    evidence: list[EvidenceItem] = Field(default_factory=list)
+    evidence: list[EvidenceItem]
     verdict: ClaimVerdict
-    tools_used: list[str] = Field(default_factory=list)
+    tools_used: list[str]
 
 
-class AuditReport(BaseModel):
-    """Итоговый отчет аудита."""
-
-    model_config = ConfigDict(extra="ignore")
-
+class AuditReport(Model):
     repo_url: str
     generated_at: str
     metadata: RepoMetadata
-    audits: list[ClaimAudit] = Field(default_factory=list)
+    audits: list[ClaimAudit]
     llm_model: str | None = None
     notes: list[str] = Field(default_factory=list)
 
@@ -113,16 +82,8 @@ class AuditReport(BaseModel):
 
     @property
     def confirmed_count(self):
-        return sum(1 for audit in self.audits if audit.verdict.verdict == "confirmed")
-
-    @property
-    def partial_count(self):
-        return sum(1 for audit in self.audits if audit.verdict.verdict == "partial")
-
-    @property
-    def missing_count(self):
-        return sum(1 for audit in self.audits if audit.verdict.verdict == "missing")
+        return sum(a.verdict.verdict == "confirmed" for a in self.audits)
 
     @property
     def supported_count(self):
-        return self.confirmed_count + self.partial_count
+        return sum(a.verdict.verdict in {"confirmed", "partial"} for a in self.audits)

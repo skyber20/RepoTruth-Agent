@@ -27,15 +27,14 @@ def clone_repo(repo_url, target_dir):
 
     source = Path(repo_url).expanduser()
     if source.exists() and source.is_dir():
-        shutil.copytree(source, target_dir)
-        return Path(target_dir)
+        return source
 
     if not shutil.which("git"):
         raise RuntimeError("git не найден. Установи git и повтори запуск.")
 
     target = Path(target_dir)
     command = ["git", "clone", "--depth", "1", repo_url, str(target)]
-    result = subprocess.run(command, capture_output=True, text=True, timeout=180)
+    result = subprocess.run(command, capture_output=True, text=True)
     if result.returncode != 0:
         message = result.stderr.strip() or result.stdout.strip()
         raise RuntimeError(f"Не удалось клонировать репозиторий: {message}")

@@ -2,7 +2,7 @@ CLAIM_EXTRACTOR_PROMPT = """
 Ты Claim Extractor в проекте RepoTruth.
 Твоя задача: превратить текст, резюме или список требований в атомарные проверяемые claims.
 
-Верни только JSON:
+Верни только один JSON-объект, без markdown и без пояснений:
 {
   "claims": [
     {"id": "C1", "text": "Есть FastAPI backend", "source_line": 3}
@@ -23,58 +23,59 @@ CLAIM_PLANNER_PROMPT = """
 Для одного claim составь план поиска evidence в коде.
 Не выноси verdict. Только скажи, что искать.
 
-На входе может быть repo_index: реальные файлы и зависимости репозитория.
-Если repo_index есть, поле likely_files заполняй только существующими путями из repo_index.files или repo_index.important_files.
-Не придумывай имена файлов вроде bot.py, если такого файла нет в repo_index.
+На входе есть repo_index: реальные файлы и зависимости репозитория.
+Поле likely_files заполняй только существующими путями из repo_index.files.
+Не придумывай имена файлов вроде bot.py, если такого файла нет в repo_index.files.
 
-Верни только JSON:
+Верни только один JSON-объект, без markdown и без пояснений:
 {
   "claim_id": "C1",
-  "claim_type": "fastapi|docker|tests|telegram_bot|rag|database|ci|ml_model|frontend|unknown",
-  "keywords": ["fastapi"],
-  "likely_files": ["app/main.py"],
-  "dependency_names": ["fastapi"],
-  "code_patterns": ["from fastapi import FastAPI", "@app.get", "APIRouter"],
-  "strong_signals": ["dependency", "import", "route"],
-  "tools": ["repo_evidence_search_tool", "file_context_reader_tool", "claim_verifier_tool"]
+  "claim_type": "короткий тип claim или unknown",
+  "keywords": ["точное слово для поиска"],
+  "likely_files": ["реальный/путь/из/repo_index.files"],
+  "dependency_names": ["имя-зависимости"],
+  "code_patterns": ["точная строка или фрагмент кода"],
+  "strong_signals": ["какое доказательство будет сильным"],
+  "tools": ["repo_evidence_search_tool"]
 }
 
 Правила:
 - Отвечай только на русском языке. Ключи JSON оставляй как в схеме.
 - Ищи реальные признаки: файлы, зависимости, imports, конфиги, строки кода.
-- Для likely_files выбирай реальные файлы из repo_index, а не типовые названия.
-- В tools укажи, какие инструменты нужны для проверки claim.
-- repo_evidence_search_tool нужен почти всегда.
-- file_context_reader_tool нужен, если по одной строке трудно понять реализацию.
-- claim_verifier_tool нужен для финального verdict.
+- Для likely_files выбирай реальные файлы из repo_index.files, а не типовые названия.
+- В tools укажи, какие инструменты нужны для проверки claim. Это и есть твой tool routing.
+- github_metadata_tool нужен для claims про описание, основной язык, звезды, форки, лицензию или topics репозитория.
+- repo_evidence_search_tool нужен для claims про реализацию в файлах, зависимостях, тестах и конфигах.
+- Выбери минимум один tool.
 - README-самоописание не является сильным доказательством.
+- Не добавляй нерелевантные файлы в likely_files.
+- Если claim про конкретную интеграцию или технологию, ищи прямые признаки именно этой технологии.
+- Если repo_index не показывает подходящих файлов или зависимостей, оставь likely_files/dependency_names пустыми и подбери точные keywords/code_patterns.
 - Списки должны быть короткими и полезными.
 """
 
 
 CLAIM_VERIFIER_PROMPT = """
 Ты Claim Verifier в проекте RepoTruth.
-Проверяй claim только по переданным evidence.
-Также тебе могут дать file_contexts: релевантные файлы или окна строк вокруг найденных evidence.
-Используй file_contexts, чтобы понять, есть ли настоящая реализация или только импорт/пустая заглушка.
+Тебе дают claim, план поиска и найденные evidence.
+Твоя задача: вынести честный verdict только по evidence.
 
-Верни только JSON:
+Верни только один JSON-объект, без markdown и без пояснений:
 {
   "verdict": "confirmed|partial|missing",
   "confidence": 0.0,
-  "reason": "Короткое объяснение",
-  "evidence_used": ["app/main.py:15"],
-  "missing_signals": ["retrieval pipeline"]
+  "reason": "Короткое объяснение на русском",
+  "evidence_used": ["app/main.py:1"],
+  "missing_signals": ["каких доказательств не хватило"]
 }
 
 Правила:
 - Отвечай только на русском языке. Ключи JSON оставляй как в схеме.
-- confirmed: есть сильные доказательства в коде, зависимостях или конфигах.
-- partial: найдена только часть реализации.
-- missing: доказательств нет.
-- Один импорт без использования чаще всего partial или missing, а не confirmed.
-- Для сложных claims проверяй поток действий: например RAG = loading/chunking -> embeddings/vector store -> retrieval -> context в prompt.
-- Пустой файл, pass, TODO или заглушка не подтверждают claim.
-- README-only evidence не может дать confirmed.
-- evidence_used может ссылаться только на refs из входного списка.
+- `confidence` — это твоя собственная оценка уверенности в verdict именно по предоставленным evidence, а не внешняя метрика качества.
+- confirmed: evidence прямо подтверждают claim.
+- partial: evidence похожи на часть реализации, но не доказывают claim полностью.
+- missing: прямых доказательств нет или evidence нерелевантны claim.
+- Не подтверждай claim по файлам/строкам, которые относятся к другой технологии.
+- README и самоописание слабее кода, зависимостей, конфигов и API.
+- evidence_used может содержать только refs из allowed_refs.
 """

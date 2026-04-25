@@ -2,136 +2,100 @@ Track: A+C
 
 # RepoTruth Agent
 
-RepoTruth Agent проверяет утверждения о GitHub-репозитории по реальным следам в коде.
+RepoTruth проверяет ТЗ, резюме или список claims по реальному коду репозитория.
 
-Он принимает список claims, строит для каждого claim план поиска, клонирует публичный репозиторий, ищет evidence в файлах/зависимостях/коде и выдает отчет:
+LLM здесь не “угадывает” ответ. Она делает две агентные вещи:
 
-- `confirmed`
-- `partial`
-- `missing`
+1. Разбивает текст на проверяемые claims.
+2. Для каждого claim выбирает tools.
 
-Главное отличие от обычного LLM-ответа: агент не верит README на слово. Для каждого вывода он показывает `path:line -> snippet`.
+Дальше обычный Python собирает evidence, а LLM-verifier ставит `confirmed`, `partial` или `missing` только по найденным evidence.
 
-## Быстрый запуск
-
-Нужен Python 3.11+.
+## Запуск
 
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
-```
 
-Настрой Qwen через OpenAI-compatible endpoint:
-
-```bash
 export OPENAI_BASE_URL="http://localhost:8000/v1"
 export OPENAI_API_KEY="your-key"
 export OPENAI_MODEL="qwen3.5:122b"
+
+python -m repotruth --repo https://github.com/user/project --claims examples/claims_basic.md --out reports/demo
 ```
 
-Запуск:
-
-```bash
-python -m repotruth audit \
-  --repo https://github.com/user/project \
-  --claims examples/claims_basic.md \
-  --out reports/demo
-```
+Можно положить `OPENAI_BASE_URL`, `OPENAI_API_KEY` и `OPENAI_MODEL` в `.env`.
 
 Результат:
 
 ```text
 reports/demo/report.md
 reports/demo/report.json
+reports/demo/run.log
 ```
 
-Для локальной отладки без LLM есть режим:
+## Tools
 
-```bash
-python -m repotruth audit --repo /path/to/local/repo --claims examples/claims_basic.md --out reports/local --no-llm
-```
+У агента два выбираемых инструмента. Именно эти имена LLM-router кладет в `plan.tools`:
 
-Для сдачи используется обычный режим с Qwen, без `--no-llm`.
+- `github_metadata_tool` — внешний GitHub API: описание, языки, звезды, форки, лицензия.
+- `repo_evidence_search_tool` — поиск по файлам, зависимостям, конфигам и строкам кода.
 
-## Как это работает
+Важно для Track A: GitHub API вызывается не всегда, а только если LLM-router выбрал `github_metadata_tool` для claim.
+
+Файлы вроде `claim_planner.py`, `claim_verifier.py` и `report_writer.py` — это не agent tools, а обычные внутренние модули каркаса.
+
+## Workflow
 
 ```text
-claims.md
+claims/resume/tz
   -> LLM Extractor
-  -> LLM Planner + Tool Router
-  -> выбранные tools
-  -> Claim Verifier
-  -> Markdown/JSON Report
+  -> clone/copy repo
+  -> repo index
+  -> LLM Tool Router
+  -> selected tools
+  -> LLM Verifier
+  -> Markdown + JSON report
 ```
 
-## Почему это агент, а не grep script
+## Почему Track A+C
 
-RepoTruth использует LLM для динамического планирования проверки.
+Track A: есть внешний API tool — GitHub REST API (`/repos`, `/languages`).
 
-Например, claim `Есть Telegram-интеграция` не проверяется только словом `telegram`. LLM Planner строит search plan: какие библиотеки, файлы, imports и code patterns нужно искать. Затем Python-инструмент ищет реальные evidence в репозитории, а LLM Verifier выносит verdict только по найденным доказательствам.
-
-Planner также возвращает список tools, которые нужны для claim. Workflow не просто всегда вызывает один и тот же код, а выполняет выбранные инструменты и записывает `tools_used` в отчет. Если rule-based verifier уже нашел сильные доказательства или понятное отсутствие evidence, LLM verifier не вызывается.
+Track C: агент собирает данные из репозитория и сохраняет структурированный `report.json`: claim, plan, выбранные tools, evidence и verdict.
 
 ## Evidence Contract
 
-Каждый `confirmed` или `partial` verdict обязан иметь evidence:
+Для `confirmed` и `partial` нужны ссылки на реальные источники:
 
 ```text
+requirements.txt:1 -> fastapi==0.115.0
 app/main.py:1 -> from fastapi import FastAPI
-requirements.txt:3 -> fastapi==0.115.0
+GitHub API /repos/owner/name -> stars=42; license=MIT
 ```
 
-README-only evidence не может подтвердить реализацию.
-
-## Поддерживаемые claim types
-
-- Docker
-- FastAPI
-- Tests
-- Telegram bot
-- RAG
-- Database
-- CI
-- ML model
-- Frontend
-
-## Переменные окружения
-
-```bash
-OPENAI_BASE_URL     # endpoint Qwen в формате OpenAI-compatible API
-OPENAI_API_KEY      # ключ endpoint
-OPENAI_MODEL        # например qwen3.5:122b
-GITHUB_TOKEN        # необязательно, помогает при GitHub rate limit
-```
+README считается слабым evidence и не подтверждает реализацию сам по себе.
 
 ## Структура
 
 ```text
 repotruth/
-  cli.py                 # CLI
-  workflow.py            # линейный agentic workflow
-  llm.py                 # Qwen OpenAI-compatible client
-  models.py              # Pydantic-модели
-  patterns.py            # локальные claim patterns
+  cli.py                    # красивый CLI на typer + rich
+  workflow.py               # основной сценарий агента
+  llm.py                    # OpenAI-compatible запрос к модели
+  models.py                 # Pydantic-схемы данных
+  prompts.py                # prompts для extractor/router
   tools/
-    clone_repo.py
-    github_metadata.py
-    claim_planner.py
-    evidence_search.py
-    claim_verifier.py
-    report_writer.py
+    claim_planner.py        # LLM Extractor + LLM Tool Router
+    github_metadata.py      # GitHub API tool
+    evidence_search.py      # поиск evidence в коде
+    claim_verifier.py       # LLM verifier по найденным evidence
+    report_writer.py        # Markdown/JSON отчет
 ```
 
-## Тесты
+## Ограничения
 
-```bash
-pytest
-```
-
-## Ограничения MVP
-
-- Проверяются только публичные GitHub-репозитории или локальные папки.
-- Evidence search не делает полный AST-анализ.
-- Архитектурные claims вроде `clean architecture` могут требовать ручной проверки.
-- RAG проверяется строго: embeddings и vector store без retrieval pipeline дадут `partial`, а не `confirmed`.
+- Для локальной папки `github_metadata_tool` не сможет получить API metadata.
+- Архитектурные claims вроде “clean architecture” лучше проверять вручную.
+- Если evidence нерелевантны claim, LLM-verifier должен вернуть `missing`.

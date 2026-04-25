@@ -1,3 +1,1 @@
-"""Пакет RepoTruth Agent."""
-
-__version__ = "0.1.0"
+"""RepoTruth Agent."""
